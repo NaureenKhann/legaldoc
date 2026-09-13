@@ -11,15 +11,11 @@ RUN apt-get update && apt-get install -y \
     mupdf-tools \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
-RUN pip install --no-cache-dir poetry==1.8.3
-
 # Copy dependency files
-COPY pyproject.toml poetry.lock* ./
+COPY requirements.txt ./
 
-# Install dependencies (no dev)
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev --no-interaction --no-ansi
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source
 COPY . .
