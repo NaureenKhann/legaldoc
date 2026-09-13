@@ -3,7 +3,6 @@ name = "legaldoc-intelligence-backend"
 version = "0.1.0"
 description = "LegalDoc Intelligence Platform - AI-powered affidavit generation and validation"
 authors = ["LegalDoc Team"]
-python = "^3.11"
 
 [tool.poetry.dependencies]
 python = "^3.11"
