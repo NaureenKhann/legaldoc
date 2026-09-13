@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 265 40% 5%;
+    --foreground: 270 20% 98%;
+    --card: 268 45% 8%;
+    --card-foreground: 270 20% 98%;
+    --primary: 271 81% 56%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 268 30% 16%;
+    --secondary-foreground: 270 20% 98%;
+    --muted: 268 25% 15%;
+    --muted-foreground: 270 15% 65%;
+    --accent: 271 81% 56%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 270 20% 98%;
+    --border: 268 30% 18%;
+    --input: 268 30% 18%;
+    --ring: 271 81% 56%;
+    --success: 142 76.2% 36.3%;
+    --warning: 38 92% 50%;
+  }
+
+  * {
+    border-color: rgba(139, 92, 246, 0.15);
+  }
+
+  body {
+    background-color: #0b0713;
+    color: #f3f4f6;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Custom scrollbar with purple glow */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #110c1d;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3b2264;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7c3aed;
+  }
+}
+
+@layer components {
+  /* Ultra-sleek glass card with purple glow border */
+  .glass-purple-card {
+    background: rgba(21, 14, 38, 0.65);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(11, 7, 19, 0.5);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-purple-card:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 12px 40px -10px rgba(124, 58, 237, 0.25);
+  }
+
+  /* Purple gradient button with pulse shine */
+  .btn-purple-gradient {
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #6366f1 100%);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 20px -2px rgba(124, 58, 237, 0.5);
+    transition: all 0.25s ease-out;
+  }
+
+  .btn-purple-gradient:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px 0 rgba(168, 85, 247, 0.6);
+  }
+
+  .btn-purple-gradient:active {
+    transform: translateY(1px);
+  }
+
+  /* Badge pill styling */
+  .purple-badge {
+    background: rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    color: #c084fc;
+  }
+
+  .legal-preview {
+    font-family: 'Calibri', 'Cambria', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #e2e8f0;
+    padding: 1.75rem;
+    background: rgba(15, 10, 26, 0.85);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(139, 92, 246, 0.25);
+  }
+
+  .legal-preview h1,
+  .legal-preview h2,
+  .legal-preview h3,
+  .legal-preview h4 {
+    font-family: 'Calibri', 'Cambria', 'Segoe UI', Arial, sans-serif;
+    color: #ffffff;
+    font-weight: 700;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-preview p {
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-preview table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .legal-preview th {
+    background-color: rgba(88, 28, 135, 0.6);
+    color: #f3e8ff;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .legal-preview td {
+    padding: 9px 14px;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    background-color: rgba(23, 15, 42, 0.4);
+    color: #cbd5e1;
+  }
+
+  .legal-preview tr:nth-child(even) td {
+    background-color: rgba(30, 20, 54, 0.4);
+  }
+
+  .legal-preview ul, .legal-preview ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-preview li {
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Custom Keyframe Animations */
+@keyframes purpleGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+  }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-purple-pulse {
+  animation: purpleGlowPulse 3s infinite ease-in-out;
+}
+
+.animate-float-soft {
+  animation: floatSoft 4s infinite ease-in-out;
+}
