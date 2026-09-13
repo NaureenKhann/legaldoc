@@ -27,6 +27,8 @@ import {
   extractionApi,
   generationApi,
   validationApi,
+  synopsisApi,
+  limitationApi,
 } from "@/lib/api/client";
 import { cn, getStatusColor } from "@/lib/utils";
 
@@ -95,6 +97,15 @@ export default function MatterWorkspacePage() {
   const { data: runs = [] } = useQuery({
     queryKey: ["runs", matterId],
     queryFn: () => generationApi.listRuns(matterId),
+  });
+
+  const synopsisMutation = useMutation({
+    mutationFn: () => synopsisApi.generate(matterId),
+  });
+
+  const limitationMutation = useMutation({
+    mutationFn: (data: { orderDate?: string; filingDate?: string; statutoryDays?: number }) =>
+      limitationApi.calculate(matterId, data.orderDate, data.filingDate, data.statutoryDays),
   });
 
   const extractMutation = useMutation({
@@ -345,6 +356,81 @@ export default function MatterWorkspacePage() {
             ) : (
               <div className="bg-[#120a21]/40 rounded-xl p-3 border border-purple-900/20 text-xs text-purple-300/60">
                 Run entity extraction first to enable affidavit generation.
+              </div>
+            )}
+          </div>
+
+          {/* Synopsis & List of Dates Generator */}
+          <div className="glass-purple-card p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-purple-400" />
+                  Automated "Synopsis & List of Dates" Generator
+                </h2>
+                <p className="text-xs text-purple-300/60 mt-0.5">Extracts date milestones and generates a court-ready chronology table</p>
+              </div>
+              <div className="flex gap-2">
+                <ActionButton
+                  label={synopsisMutation.isPending ? "Generating..." : "Generate List of Dates"}
+                  onClick={() => synopsisMutation.mutate()}
+                  loading={synopsisMutation.isPending}
+                />
+                <a href={synopsisApi.downloadUrl(matterId)} download>
+                  <ActionButton label="Download DOCX" onClick={() => {}} variant="secondary" />
+                </a>
+              </div>
+            </div>
+
+            {synopsisMutation.data && (
+              <div className="bg-[#120a21]/80 rounded-xl p-4 border border-purple-800/40 text-xs text-purple-200 space-y-2">
+                <p className="font-semibold text-white">Chronology Events Extracted ({synopsisMutation.data.events_count} Milestones):</p>
+                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-2">
+                  {synopsisMutation.data.events.map((ev: any, idx: number) => (
+                    <div key={idx} className="flex gap-2 items-start bg-purple-950/40 p-2 rounded-lg border border-purple-900/30">
+                      <span className="font-mono text-purple-400 shrink-0 font-bold">{ev.date}</span>
+                      <span className="text-gray-300">{ev.event}</span>
+                      <span className="text-purple-400/70 ml-auto shrink-0 font-mono text-[10px]">{ev.annexure}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Condonation of Delay Calculator */}
+          <div className="glass-purple-card p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                  Condonation of Delay Calculator (Section 5 Limitation Act)
+                </h2>
+                <p className="text-xs text-purple-300/60 mt-0.5">Calculates delay days and auto-drafts Section 5 Interlocutory Petition</p>
+              </div>
+              <div className="flex gap-2">
+                <ActionButton
+                  label={limitationMutation.isPending ? "Calculating..." : "Calculate Delay"}
+                  onClick={() => limitationMutation.mutate({})}
+                  loading={limitationMutation.isPending}
+                />
+                <a href={limitationApi.downloadUrl(matterId)} download>
+                  <ActionButton label="Download Section 5 DOCX" onClick={() => {}} variant="secondary" />
+                </a>
+              </div>
+            </div>
+
+            {limitationMutation.data && (
+              <div className="bg-[#120a21]/80 rounded-xl p-4 border border-purple-800/40 text-xs text-purple-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-white">Limitation Calculation Result:</p>
+                    <p className="text-purple-300/80">Order Date: <code className="text-purple-300">{limitationMutation.data.limitation.order_date}</code> • Statutory Limit: <code className="text-purple-300">{limitationMutation.data.limitation.statutory_limit_days} Days</code></p>
+                  </div>
+                  <span className={cn("px-3 py-1.5 rounded-lg text-xs font-bold border", limitationMutation.data.limitation.is_delayed ? "bg-amber-950/60 border-amber-700/60 text-amber-300" : "bg-emerald-950/60 border-emerald-700/60 text-emerald-300")}>
+                    {limitationMutation.data.limitation.is_delayed ? `⚠️ ${limitationMutation.data.limitation.delay_days} Days Delay Detected` : "✅ Filed Within Limitation"}
+                  </span>
+                </div>
               </div>
             )}
           </div>

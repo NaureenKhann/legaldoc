@@ -101,6 +101,8 @@ def create_app() -> FastAPI:
         generation,
         validation,
         evaluation,
+        synopsis,
+        limitation,
     )
 
     prefix = settings.API_V1_PREFIX
@@ -111,6 +113,8 @@ def create_app() -> FastAPI:
     app.include_router(generation.router, prefix=prefix, tags=["Generation"])
     app.include_router(validation.router, prefix=prefix, tags=["Validation"])
     app.include_router(evaluation.router, prefix=prefix, tags=["Evaluation"])
+    app.include_router(synopsis.router, prefix=prefix, tags=["Synopsis"])
+    app.include_router(limitation.router, prefix=prefix, tags=["Limitation"])
 
     logger.info(
         "app_started",

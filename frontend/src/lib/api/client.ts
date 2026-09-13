@@ -84,6 +84,30 @@ export const evaluationApi = {
     `${BASE}/api/v1/generation-runs/${runId}/evaluation/download?format=${format || "markdown"}`,
 };
 
+// ── Synopsis & List of Dates ───────────────────────────────────────────────────
+export const synopsisApi = {
+  generate: (matterId: string) =>
+    apiClient.post(`/matters/${matterId}/synopsis/generate`).then((r) => r.data),
+  downloadUrl: (matterId: string) =>
+    `${BASE}/api/v1/matters/${matterId}/synopsis/download`,
+};
+
+// ── Limitation & Condonation of Delay ─────────────────────────────────────────
+export const limitationApi = {
+  calculate: (matterId: string, orderDate?: string, filingDate?: string, statutoryDays = 30) =>
+    apiClient
+      .post(
+        `/matters/${matterId}/limitation/calculate?statutory_days=${statutoryDays}${
+          orderDate ? `&order_date=${orderDate}` : ""
+        }${filingDate ? `&filing_date=${filingDate}` : ""}`
+      )
+      .then((r) => r.data),
+  downloadUrl: (matterId: string, orderDate?: string, filingDate?: string, statutoryDays = 30) =>
+    `${BASE}/api/v1/matters/${matterId}/limitation/download?statutory_days=${statutoryDays}${
+      orderDate ? `&order_date=${orderDate}` : ""
+    }${filingDate ? `&filing_date=${filingDate}` : ""}`,
+};
+
 // ── Health ─────────────────────────────────────────────────────────────────────
 export const healthApi = {
   check: () => apiClient.get("/health").then((r) => r.data),
